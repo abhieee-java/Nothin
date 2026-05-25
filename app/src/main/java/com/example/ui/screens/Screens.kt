@@ -186,6 +186,16 @@ fun NothingPermissionSetupCard(
                     lineHeight = 16.sp
                 )
             )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = "Notice: If Android blocks this with a 'Restricted Setting' error, please go to your device Settings -> Apps -> App Info -> 3 dots in top right -> Allow restricted settings.",
+                style = TextStyle(
+                    color = NothingRed,
+                    fontFamily = FontFamily.SansSerif,
+                    fontSize = 11.sp,
+                    lineHeight = 14.sp
+                )
+            )
             Spacer(modifier = Modifier.height(12.dp))
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -438,7 +448,7 @@ fun RecentsScreen(
                                 modifier = Modifier.padding(top = 8.dp, bottom = 4.dp, start = 4.dp)
                             )
                         }
-                        items(recentLogs, key = { "recent_${it.id}" }) { recent ->
+                        items(recentLogs) { recent ->
                             RecentCallRow(
                                 recent = recent,
                                 onItemClick = {
@@ -467,7 +477,7 @@ fun RecentsScreen(
                                 modifier = Modifier.padding(top = 16.dp, bottom = 4.dp, start = 4.dp)
                             )
                         }
-                        items(earlierLogs, key = { "earlier_${it.id}" }) { recent ->
+                        items(earlierLogs) { recent ->
                             RecentCallRow(
                                 recent = recent,
                                 onItemClick = {
@@ -669,7 +679,7 @@ fun FavoritesScreen(
                     contentPadding = PaddingValues(bottom = 96.dp),
                     modifier = Modifier.weight(1f)
                 ) {
-                    items(favorites, key = { it.id }) { favorite ->
+                    items(favorites) { favorite ->
                         NothingGlassCard(
                             onClick = {
                                 viewModel.selectContact(favorite.id)
@@ -934,7 +944,7 @@ fun ContactDetailScreen(
                 }
             }
 
-            items(history, key = { it.id }) { item ->
+            items(history) { item ->
                 CallHistoryLogItem(item)
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -1737,7 +1747,7 @@ fun ContactsScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(bottom = 96.dp)
                 ) {
-                    items(contacts, key = { it.id }) { contact ->
+                    items(contacts) { contact ->
                         ContactRow(
                             contact = contact,
                             onItemClick = {

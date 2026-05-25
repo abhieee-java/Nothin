@@ -178,7 +178,8 @@ class DialerViewModel(application: Application) : AndroidViewModel(application) 
                 val starredCol = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.STARRED)
                 
                 while (cursor.moveToNext()) {
-                    val id = if (idCol >= 0) cursor.getString(idCol) ?: "" else ""
+                    val idRaw = if (idCol >= 0) cursor.getString(idCol) else null
+                    val id = if (idRaw.isNullOrBlank()) java.util.UUID.randomUUID().toString() else idRaw
                     val name = if (nameCol >= 0) cursor.getString(nameCol) ?: "Unknown" else "Unknown"
                     val phone = if (numCol >= 0) cursor.getString(numCol) ?: "" else ""
                     val photo = if (photoCol >= 0) cursor.getString(photoCol) ?: "" else ""
@@ -231,7 +232,8 @@ class DialerViewModel(application: Application) : AndroidViewModel(application) 
                 val dateCol = cursor.getColumnIndex(CallLog.Calls.DATE)
                 
                 while (cursor.moveToNext()) {
-                    val id = if (idCol >= 0) cursor.getString(idCol) ?: "" else ""
+                    val idRaw = if (idCol >= 0) cursor.getString(idCol) else null
+                    val id = if (idRaw.isNullOrBlank()) java.util.UUID.randomUUID().toString() else idRaw
                     val phone = if (numCol >= 0) cursor.getString(numCol) ?: "" else ""
                     val cachedName = if (nameCol >= 0) cursor.getString(nameCol) else null
                     val type = if (typeCol >= 0) cursor.getInt(typeCol) else CallLog.Calls.INCOMING_TYPE
@@ -433,7 +435,8 @@ class DialerViewModel(application: Application) : AndroidViewModel(application) 
                 val durCol = cursor.getColumnIndex(CallLog.Calls.DURATION)
                 
                 while (cursor.moveToNext()) {
-                    val id = if (idCol >= 0) cursor.getString(idCol) ?: "" else ""
+                    val idRaw = if (idCol >= 0) cursor.getString(idCol) else null
+                    val id = if (idRaw.isNullOrBlank()) java.util.UUID.randomUUID().toString() else idRaw
                     val number = if (numCol >= 0) cursor.getString(numCol) ?: "" else ""
                     val type = if (typeCol >= 0) cursor.getInt(typeCol) else CallLog.Calls.INCOMING_TYPE
                     val dateMs = if (dateCol >= 0) cursor.getLong(dateCol) else 0L
