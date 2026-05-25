@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -35,7 +36,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Email
@@ -48,10 +49,16 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.VideoCall
-import androidx.compose.material.icons.filled.VolumeUp
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.automirrored.filled.CallMissed
+import androidx.compose.material.icons.automirrored.filled.CallMade
+import androidx.compose.material.icons.automirrored.filled.CallReceived
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Dialpad
+import androidx.compose.material.icons.outlined.Call
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -100,33 +107,35 @@ import com.example.viewmodel.DialerViewModel
 fun NothingHeaderPrimal(title: String, subtitle: String? = null) {
     Column {
         Row(
-            verticalAlignment = Alignment.Bottom,
-            modifier = Modifier.padding(top = 16.dp, bottom = 4.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp, bottom = 4.dp),
+            horizontalArrangement = Arrangement.End
         ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.displayMedium,
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Add",
+                tint = Color.LightGray,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = "More options",
+                tint = Color.LightGray,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+        Text(
+            text = title,
+            style = TextStyle(
+                fontFamily = FontFamily.Serif,
+                fontSize = 42.sp,
+                fontWeight = FontWeight.Normal,
                 color = Color.White
-            )
-            Box(
-                modifier = Modifier
-                    .padding(bottom = 14.dp, start = 6.dp)
-                    .size(6.dp)
-                    .background(NothingRed, CircleShape)
-            )
-        }
-        if (subtitle != null) {
-            Text(
-                text = subtitle,
-                style = TextStyle(
-                    color = MaterialTheme.colorScheme.secondary,
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = 12.sp,
-                    letterSpacing = 1.sp
-                ),
-                modifier = Modifier.padding(bottom = 12.dp)
-            )
-        }
+            ),
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
     }
 }
 
@@ -306,11 +315,11 @@ fun NothingNavigationDeck(
             // SLIM GLASS CAPSULE BAR FOR 3 TABS
             Row(
                 modifier = Modifier
-                    .height(56.dp)
-                    .width(260.dp)
-                    .border(BorderStroke(1.dp, NothingBorderGray), RoundedCornerShape(28.dp))
-                    .background(Color(0xE00A0A0A), RoundedCornerShape(28.dp))
-                    .padding(horizontal = 20.dp),
+                    .height(64.dp)
+                    .width(280.dp)
+                    .background(NothingCardGray, RoundedCornerShape(32.dp))
+                    .border(BorderStroke(0.5.dp, NothingBorderGray), RoundedCornerShape(32.dp))
+                    .padding(horizontal = 24.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -400,7 +409,7 @@ fun RecentsScreen(
                 .statusBarsPadding()
                 .padding(horizontal = 24.dp)
         ) {
-            NothingHeaderPrimal(title = "Recents", subtitle = "COMMUNICATION HISTORY")
+            NothingHeaderPrimal(title = "Recents")
 
             // Real-time permission guide banner card
             NothingPermissionSetupCard(state = state, viewModel = viewModel)
@@ -535,23 +544,13 @@ fun RecentCallRow(
     onCallClick: () -> Unit
 ) {
     val isMissed = recent.direction == CallDirection.MISSED
-    val crimsonColor = NothingRed
-    val primaryTextColor = if (isMissed) crimsonColor else Color.White
-    val secondaryTextColor = if (isMissed) crimsonColor else MaterialTheme.colorScheme.secondary
-    val arrowSymbol = when (recent.direction) {
-        CallDirection.MISSED -> "↙ "
-        CallDirection.OUTGOING -> "↗ "
-        CallDirection.INCOMING -> "↙ "
-    }
+    val secondaryTextColor = if (isMissed) NothingRed else Color.Gray
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(NothingCardGray)
-            .border(BorderStroke(0.8.dp, NothingBorderGray), RoundedCornerShape(16.dp))
             .clickable { onItemClick() }
-            .padding(12.dp),
+            .padding(vertical = 12.dp, horizontal = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ContactAvatar(
@@ -560,7 +559,7 @@ fun RecentCallRow(
             size = 48.dp
         )
 
-        Spacer(modifier = Modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(16.dp))
 
         Column(
             modifier = Modifier.weight(1f)
@@ -568,25 +567,35 @@ fun RecentCallRow(
             Text(
                 text = recent.contact.name,
                 style = TextStyle(
-                    color = primaryTextColor,
-                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    fontWeight = FontWeight.Medium,
                     fontFamily = FontFamily.SansSerif,
-                    fontSize = 15.sp
+                    fontSize = 17.sp
                 ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            
+
             Spacer(modifier = Modifier.height(2.dp))
 
             Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = when (recent.direction) {
+                        CallDirection.MISSED -> Icons.AutoMirrored.Filled.CallMissed
+                        CallDirection.OUTGOING -> Icons.AutoMirrored.Filled.CallMade
+                        CallDirection.INCOMING -> Icons.AutoMirrored.Filled.CallReceived
+                    },
+                    contentDescription = null,
+                    tint = secondaryTextColor,
+                    modifier = Modifier.size(14.dp).padding(end = 4.dp)
+                )
                 Text(
-                    text = "$arrowSymbol${recent.carrierTime}",
+                    text = recent.carrierTime,
                     style = TextStyle(
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 11.sp,
+                        fontFamily = FontFamily.SansSerif,
+                        fontSize = 13.sp,
                         color = secondaryTextColor,
-                        fontWeight = if (isMissed) FontWeight.Bold else FontWeight.Normal
+                        fontWeight = FontWeight.Normal
                     ),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -597,14 +606,14 @@ fun RecentCallRow(
         IconButton(
             onClick = { onCallClick() },
             modifier = Modifier
-                .size(36.dp)
+                .size(40.dp)
                 .testTag("call_button_${recent.contact.id}")
         ) {
             Icon(
-                imageVector = Icons.Default.Call,
+                imageVector = Icons.Outlined.Call,
                 contentDescription = "Quick Call",
-                tint = if (isMissed) crimsonColor else Color.LightGray,
-                modifier = Modifier.size(18.dp)
+                tint = Color.LightGray,
+                modifier = Modifier.size(20.dp)
             )
         }
     }
@@ -829,7 +838,7 @@ fun ContactDetailScreen(
                             .border(BorderStroke(1.dp, NothingBorderGray), CircleShape)
                     ) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Go back",
                             tint = Color.White
                         )
@@ -1190,54 +1199,44 @@ fun DetailActionItem(
 @Composable
 fun CallHistoryLogItem(item: CallHistoryItem) {
     val isMissed = item.direction == CallDirection.MISSED
-    val crimsonColor = NothingRed
-    val primaryColor = if (isMissed) crimsonColor else Color.White
-    val secondaryColor = if (isMissed) crimsonColor else MaterialTheme.colorScheme.secondary
-    val arrowSymbol = when (item.direction) {
-        CallDirection.MISSED -> "↙ "
-        CallDirection.OUTGOING -> "↗ "
-        CallDirection.INCOMING -> "↙ "
-    }
+    val secondaryColor = if (isMissed) NothingRed else Color.Gray
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .background(NothingCardGray)
-            .border(BorderStroke(0.8.dp, NothingBorderGray), RoundedCornerShape(12.dp))
-            .padding(12.dp),
+            .padding(vertical = 8.dp, horizontal = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            modifier = Modifier
-                .size(28.dp)
-                .background(if (isMissed) NothingRed.copy(alpha = 0.15f) else NothingWhiteMuted, CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = arrowSymbol.trim(),
-                style = TextStyle(color = primaryColor, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-            )
-        }
+        Icon(
+            imageVector = when (item.direction) {
+                CallDirection.MISSED -> Icons.AutoMirrored.Filled.CallMissed
+                CallDirection.OUTGOING -> Icons.AutoMirrored.Filled.CallMade
+                CallDirection.INCOMING -> Icons.AutoMirrored.Filled.CallReceived
+            },
+            contentDescription = null,
+            tint = secondaryColor,
+            modifier = Modifier.size(24.dp)
+        )
 
-        Spacer(modifier = Modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(16.dp))
 
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = item.time,
                 style = TextStyle(
-                    color = primaryColor,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 13.sp
+                    color = Color.White,
+                    fontFamily = FontFamily.SansSerif,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 15.sp
                 )
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = item.number,
                 style = TextStyle(
-                    color = secondaryColor,
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = 11.sp
+                    color = Color.Gray,
+                    fontFamily = FontFamily.SansSerif,
+                    fontSize = 13.sp
                 )
             )
         }
@@ -1246,10 +1245,10 @@ fun CallHistoryLogItem(item: CallHistoryItem) {
             Text(
                 text = item.duration,
                 style = TextStyle(
-                    color = primaryColor,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = 11.sp
+                    color = Color.White,
+                    fontWeight = FontWeight.Light,
+                    fontFamily = FontFamily.SansSerif,
+                    fontSize = 13.sp
                 )
             )
         }
@@ -1321,17 +1320,16 @@ fun ActiveCallScreen(
                 // TIMER CHIP DOTTED
                 Box(
                     modifier = Modifier
-                        .border(BorderStroke(1.dp, NothingRed), RoundedCornerShape(12.dp))
-                        .background(NothingRed.copy(alpha = 0.15f), RoundedCornerShape(12.dp))
-                        .padding(horizontal = 14.dp, vertical = 4.dp)
+                        .background(NothingCardGray, RoundedCornerShape(16.dp))
+                        .padding(horizontal = 16.dp, vertical = 6.dp)
                 ) {
                     Text(
                         text = "CALL ACTIVE • ${viewModel.formatDuration(state.callDurationSeconds)}",
                         style = TextStyle(
-                            color = NothingRed,
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 11.sp,
+                            color = Color.White,
+                            fontFamily = FontFamily.SansSerif,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 12.sp,
                             letterSpacing = 1.sp
                         )
                     )
@@ -1342,8 +1340,8 @@ fun ActiveCallScreen(
                 Text(
                     text = contact.name,
                     style = TextStyle(
-                        fontFamily = FontFamily.Serif,
-                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.SansSerif,
+                        fontWeight = FontWeight.Light,
                         color = Color.White,
                         fontSize = 36.sp,
                         textAlign = TextAlign.Center
@@ -1355,11 +1353,11 @@ fun ActiveCallScreen(
                 Text(
                     text = if (state.isHoldOn) "[ CALL HELD ]" else contact.subtitle.uppercase(),
                     style = TextStyle(
-                        color = if (state.isHoldOn) NothingRed else Color.LightGray,
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.25.sp,
+                        color = if (state.isHoldOn) NothingRed else Color.Gray,
+                        fontFamily = FontFamily.SansSerif,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Normal,
+                        letterSpacing = 1.sp,
                         textAlign = TextAlign.Center
                     )
                 )
@@ -1397,7 +1395,7 @@ fun ActiveCallScreen(
                             onClick = { viewModel.toggleKeypad() }
                         )
                         ActiveCallControlBtn(
-                            icon = Icons.Default.VolumeUp,
+                            icon = Icons.AutoMirrored.Filled.VolumeUp,
                             label = "Speaker",
                             isActive = state.isSpeakerOn,
                             onClick = { viewModel.toggleSpeaker() }
@@ -1483,13 +1481,9 @@ fun ActiveCallControlBtn(
     ) {
         Box(
             modifier = Modifier
-                .size(54.dp)
+                .size(60.dp)
                 .clip(CircleShape)
                 .background(if (isActive) Color.White else NothingCardGray)
-                .border(
-                    BorderStroke(1.dp, if (isActive) Color.White else NothingBorderGray),
-                    CircleShape
-                )
                 .clickable { onClick() },
             contentAlignment = Alignment.Center
         ) {
@@ -1497,17 +1491,17 @@ fun ActiveCallControlBtn(
                 imageVector = icon,
                 contentDescription = label,
                 tint = if (isActive) NothingBlack else Color.White,
-                modifier = Modifier.size(22.dp)
+                modifier = Modifier.size(24.dp)
             )
         }
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = label,
             style = TextStyle(
-                fontFamily = FontFamily.Monospace,
-                fontSize = 10.sp,
-                color = if (isActive) Color.White else MaterialTheme.colorScheme.secondary,
-                letterSpacing = 0.5.sp,
+                fontFamily = FontFamily.SansSerif,
+                fontSize = 12.sp,
+                color = if (isActive) Color.White else Color.Gray,
+                fontWeight = FontWeight.Medium,
                 textAlign = TextAlign.Center
             )
         )
@@ -1528,31 +1522,20 @@ fun RetroDialpadOverlay(
             .fillMaxWidth()
             .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
             .background(NothingDarkGray)
-            .border(BorderStroke(1.dp, NothingBorderGray), RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
             .padding(horizontal = 24.dp, vertical = 20.dp)
-            .navigationBarsPadding()
+            .navigationBarsPadding(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            horizontalArrangement = Arrangement.End
         ) {
-            Text(
-                text = "RETRO TOUCH TONE DIALPAD",
-                style = TextStyle(
-                    fontFamily = FontFamily.Monospace,
-                    color = MaterialTheme.colorScheme.secondary,
-                    fontSize = 10.sp,
-                    letterSpacing = 1.25.sp
-                )
-            )
-
             IconButton(onClick = onCloseClick) {
                 Icon(
                     imageVector = Icons.Default.Clear,
                     contentDescription = "Close keypad",
-                    tint = Color.White,
-                    modifier = Modifier.size(18.dp)
+                    tint = Color.Gray,
+                    modifier = Modifier.size(24.dp)
                 )
             }
         }
@@ -1561,45 +1544,42 @@ fun RetroDialpadOverlay(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(54.dp)
-                .border(BorderStroke(1.dp, NothingBorderGray), RoundedCornerShape(12.dp))
-                .background(NothingBlack, RoundedCornerShape(12.dp))
-                .padding(horizontal = 16.dp),
-            contentAlignment = Alignment.CenterStart
+                .padding(vertical = 16.dp),
+            contentAlignment = Alignment.Center
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.wrapContentWidth(),
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = input.ifEmpty { "Enter custom tone..." },
+                    text = input,
                     style = TextStyle(
-                        color = if (input.isEmpty()) MaterialTheme.colorScheme.secondary else NothingRed,
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp
+                        color = Color.White,
+                        fontFamily = FontFamily.SansSerif,
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Light,
+                        letterSpacing = 2.sp
                     ),
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
+                    overflow = TextOverflow.Ellipsis
                 )
 
                 if (input.isNotEmpty()) {
+                    Spacer(modifier = Modifier.width(16.dp))
                     IconButton(onClick = onClearClick, modifier = Modifier.size(24.dp)) {
                         Icon(
                             imageVector = Icons.Default.Clear,
                             contentDescription = "Backspace",
-                            tint = Color.LightGray,
-                            modifier = Modifier.size(16.dp)
+                            tint = Color.Gray,
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         // TOUCH KEYBOARD CORES (4 rows)
         val keys = listOf(
@@ -1611,7 +1591,7 @@ fun RetroDialpadOverlay(
 
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             keys.forEach { rowKeys ->
                 Row(
@@ -1629,27 +1609,23 @@ fun RetroDialpadOverlay(
         }
 
         if (showCallAction && input.isNotEmpty()) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+            Spacer(modifier = Modifier.height(32.dp))
+            Box(
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape)
+                    .background(NothingRed)
+                    .clickable { onCallClick(input) },
+                contentAlignment = Alignment.Center
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(56.dp)
-                        .clip(CircleShape)
-                        .background(NothingRed)
-                        .clickable { onCallClick(input) },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Call,
-                        contentDescription = "Place Real Call",
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Default.Call,
+                    contentDescription = "Place Real Call",
+                    tint = Color.White,
+                    modifier = Modifier.size(32.dp)
+                )
             }
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
@@ -1661,10 +1637,9 @@ fun RetroKeypadCell(
 ) {
     Box(
         modifier = Modifier
-            .size(62.dp)
+            .size(72.dp)
             .clip(CircleShape)
-            .background(NothingBlack)
-            .border(BorderStroke(1.dp, NothingBorderGray), CircleShape)
+            .background(NothingCardGray)
             .clickable { onKeyClick() },
         contentAlignment = Alignment.Center
     ) {
@@ -1672,9 +1647,9 @@ fun RetroKeypadCell(
             text = digit,
             style = TextStyle(
                 color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Monospace,
-                fontSize = 22.sp
+                fontWeight = FontWeight.Light,
+                fontFamily = FontFamily.SansSerif,
+                fontSize = 28.sp
             )
         )
     }
@@ -1806,11 +1781,8 @@ fun ContactRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(NothingCardGray)
-            .border(BorderStroke(0.8.dp, NothingBorderGray), RoundedCornerShape(16.dp))
             .clickable { onItemClick() }
-            .padding(12.dp),
+            .padding(vertical = 12.dp, horizontal = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ContactAvatar(
@@ -1819,7 +1791,7 @@ fun ContactRow(
             size = 48.dp
         )
 
-        Spacer(modifier = Modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(16.dp))
 
         Column(
             modifier = Modifier.weight(1f)
@@ -1828,35 +1800,36 @@ fun ContactRow(
                 text = contact.name,
                 style = TextStyle(
                     color = Color.White,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Medium,
                     fontFamily = FontFamily.SansSerif,
-                    fontSize = 15.sp
+                    fontSize = 17.sp
                 ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            
+
             Spacer(modifier = Modifier.height(2.dp))
 
             Text(
                 text = contact.phone,
                 style = TextStyle(
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = 11.sp,
-                    color = MaterialTheme.colorScheme.secondary
+                    fontFamily = FontFamily.SansSerif,
+                    fontSize = 13.sp,
+                    color = Color.Gray,
+                    fontWeight = FontWeight.Normal
                 )
             )
         }
 
         IconButton(
             onClick = { onCallClick() },
-            modifier = Modifier.size(36.dp)
+            modifier = Modifier.size(40.dp)
         ) {
             Icon(
-                imageVector = Icons.Default.Call,
+                imageVector = Icons.Outlined.Call,
                 contentDescription = "Quick Call",
                 tint = Color.LightGray,
-                modifier = Modifier.size(18.dp)
+                modifier = Modifier.size(20.dp)
             )
         }
     }

@@ -3,11 +3,12 @@ package com.example.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val NothingBlack = Color(0xFF000000)
-val NothingDarkGray = Color(0xFF121212)
-val NothingCardGray = Color(0xFF1A1A1A) // Precision match for bg-[#1A1A1A]
-val NothingBorderGray = Color(0x13FFFFFF) // Precision match for border-white/8 transparency
-val NothingTextPrimary = Color(0xFFF3F4F6) // Precision match for text-gray-100
-val NothingTextSecondary = Color(0xFF9CA3AF) // Precision match for text-gray-400
-val NothingRed = Color(0xFFFF0000) // Stark crimson red accent
-val NothingRedMuted = Color(0x22FF0000)
-val NothingWhiteMuted = Color(0x0CFFFFFF) // Precision match for border-white/5 or active:bg-white/5
+val NothingDarkGray = Color(0xFF111111) // refined dark gray
+val NothingCardGray = Color(0xFF161616) // darker card surface
+val NothingBorderGray = Color(0x22FFFFFF) // slightly more visible border
+val NothingTextPrimary = Color(0xFFFFFFFF) // Pure white
+val NothingTextSecondary = Color(0xFFA0A0A0) // Soft gray
+val NothingRed = Color(0xFF9E2A2B) // Deep muted red
+val NothingRedMuted = Color(0x339E2A2B) // Muted variant
+val NothingWhiteMuted = Color(0x11FFFFFF) // soft hover
+

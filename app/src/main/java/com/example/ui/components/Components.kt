@@ -55,19 +55,15 @@ fun NothingSearchBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(54.dp)
-            .border(
-                BorderStroke(1.dp, NothingBorderGray),
-                RoundedCornerShape(27.dp)
-            )
-            .background(NothingCardGray, RoundedCornerShape(27.dp))
+            .height(48.dp)
+            .background(NothingCardGray, RoundedCornerShape(24.dp))
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = Icons.Default.Search,
             contentDescription = "Search icon",
-            tint = NothingRed,
+            tint = Color.LightGray,
             modifier = Modifier.size(20.dp)
         )
 
@@ -80,9 +76,9 @@ fun NothingSearchBar(
                 Text(
                     text = "Search contacts...",
                     style = TextStyle(
-                        color = MaterialTheme.colorScheme.secondary,
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 14.sp
+                        color = Color.LightGray,
+                        fontFamily = FontFamily.SansSerif,
+                        fontSize = 15.sp
                     )
                 )
             }
@@ -466,16 +462,11 @@ fun NothingGlassCard(
     content: @Composable () -> Unit
 ) {
     Card(
-        modifier = modifier
-            .border(
-                BorderStroke(0.8.dp, NothingBorderGray),
-                RoundedCornerShape(16.dp)
-            ),
-        shape = RoundedCornerShape(16.dp),
+        modifier = modifier.clickable { onClick() },
+        shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(
             containerColor = NothingCardGray
-        ),
-        onClick = onClick
+        )
     ) {
         Box(modifier = Modifier.padding(16.dp)) {
             content()
