@@ -1,0 +1,6 @@
+{
+  "name": "Nothing Dialer",
+  "description": "A premium dark Nothing OS styled dialer clone with elegant typography and unique visual identity features.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
